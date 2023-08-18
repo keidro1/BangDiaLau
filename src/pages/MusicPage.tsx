@@ -1,7 +1,6 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
-function MusicPage() {
+const MusicPage = () => {
   const { id } = useParams();
 
   return (

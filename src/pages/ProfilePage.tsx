@@ -1,6 +1,4 @@
-import React from 'react';
-
-function ProfilePage() {
+const ProfilePage = () => {
   return (
     <div>
       <h2>Trang cá nhân</h2>

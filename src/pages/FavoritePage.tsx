@@ -1,6 +1,5 @@
-import React from 'react';
 
-function FavoritePage() {
+const FavoritePage = () => {
   return (
     <div>
       <h2>Danh sách bài hát yêu thích</h2>

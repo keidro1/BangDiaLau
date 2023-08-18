@@ -1,6 +1,4 @@
-import React from 'react';
-
-function HomePage() {
+const HomePage = () => {
   return (
     <div>
       <h1>Trung tâm băng địa lậu</h1>
