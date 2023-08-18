@@ -5,8 +5,10 @@ import MusicPage from '../pages/MusicPage';
 import FavoritePage from '../pages/FavoritePage';
 import ProfilePage from '../pages/ProfilePage';
 import Navigation from '../components/Navigation';
+import LoadingLoginPage from '../pages/LoadingLoginPage';
 
 const App = () => {
+  console.log(import.meta.env.CLIENT_ID);
   return (
     <Router>
       <Navigation />
@@ -15,6 +17,7 @@ const App = () => {
         <Route path="/music/:id" element={<MusicPage />} />
         <Route path="/favorites" element={<FavoritePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/callback" element={<LoadingLoginPage />} />
       </Routes>
     </Router>
   );
