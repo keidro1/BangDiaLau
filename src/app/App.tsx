@@ -4,14 +4,12 @@ import HomePage from '../pages/HomePage';
 import MusicPage from '../pages/MusicPage';
 import FavoritePage from '../pages/FavoritePage';
 import ProfilePage from '../pages/ProfilePage';
-import Navigation from '../components/Navigation';
 import LoadingLoginPage from '../pages/LoadingLoginPage';
 
 const App = () => {
   console.log(import.meta.env.CLIENT_ID);
   return (
     <Router>
-      <Navigation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/music/:id" element={<MusicPage />} />

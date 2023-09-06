@@ -1,10 +1,18 @@
 import React from 'react';
+import Sidebar from '../components/Sidebar';
+import Player from '../components/Player';
+import Center from '../components/Center';
 
-const HomePage = () => {
+function HomePage() {
   return (
-    <div>
-      <h1>Trung tâm băng địa lậu</h1>
-      {/* Hiển thị danh sách bài hát */}
+    <div style={{ display: "flex" }}>
+      <Sidebar />
+      <main className="flex">
+        <Center />
+      </main>
+      <div className="sticky bottom-0 text-white">
+        <Player />
+      </div>
     </div>
   );
 }
