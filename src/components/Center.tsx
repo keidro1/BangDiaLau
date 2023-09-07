@@ -1,24 +1,36 @@
 import React from 'react';
+import { useEffect, useState } from 'react'
+import Song from '../components/Song'
 
-const colours = [
-	'from-indigo-500',
-	'from-blue-500',
-	'from-green-500',
-	'from-red-500',
-	'from-yellow-500',
-	'from-pink-500',
-	'from-purple-500'
-]
 
 function Center() {
-
 	return (
-		<div className='flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hidden'>
-			<header className='absolute top-5 right-8'>
-				<div className='flex  bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full py-1 pl-1 pr-2'>
-                        USER
-				</div>
-			</header>
+		<div className='bg-gradient-to-b from-green-600 flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hidden'>
+			
+				<h1 className="ml-10 max-w-md h-50 text-green-400 leading-loose tracking-wider md:text-4xl lg:text-6xl x1:text-6xl p-8">Welcome to Bang Dia Lau </h1>
+		
+			
+			<section className='flex items-end space-x-7  h-80 p-8'>
+
+					<p>Playlist</p>
+
+					<h1 className='text-2xl font-bold md:text-3xl xl:text-5xl cursor-pointer'>
+
+								Long oc luoc
+
+					</h1>
+			</section>
+
+			<div>
+				<Song/>
+				<Song/>
+				<Song/>	
+				<Song/>
+				<Song/>
+				<Song/>
+				<Song/>
+			</div>
+
 		</div>
 	)
 }

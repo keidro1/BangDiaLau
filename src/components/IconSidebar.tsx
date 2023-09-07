@@ -7,7 +7,7 @@ interface Props{
 
 function IconSidebar({icon: Icon, label}: Props) {
     return(
-        <div className='flex items-center space-x-2 hover:text-white'>
+        <div className='flex items-center space-x-2 hover:text-white cursor-pointer'>
 			<Icon className='icon' />
 			<span>{label}</span>
 		</div>
