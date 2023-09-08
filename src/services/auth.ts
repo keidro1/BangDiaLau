@@ -29,12 +29,14 @@ const generateRandomString = (length: number) => {
 };
   
   
-
+export const logout = () => {
+    clearCookies();
+    cachedAuthInfo = null;
+}
 
 export const login = () => {
     let state = generateRandomString(16);
     let scope = 'user-read-private user-read-email';
-  
     window.location.replace('https://accounts.spotify.com/authorize?' +
     queryString.stringify({
       response_type: 'code',
@@ -83,7 +85,18 @@ export const refreshToken = async (refreshToken: string): Promise<AuthInfo | nul
 
 let cachedAuthInfo: AuthInfo | null = null;
 
+const getAuthInfoFromCookie = (): AuthInfo | null => {
+    if (document.cookie.length !== 0)
+        return JSON.parse(document.cookie.substring(0, document.cookie.length - 1)) as AuthInfo;
+    return null;
+}
+
+const clearCookies = () => {
+    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+}
+
 export const saveAuthInfo = (authInfo: AuthInfo) => {
+    clearCookies();
     document.cookie = JSON.stringify(authInfo);
     cachedAuthInfo = authInfo;
 }
@@ -91,14 +104,12 @@ export const saveAuthInfo = (authInfo: AuthInfo) => {
 export const getAuthInfo = (): AuthInfo | null => {
     if (!checkLogin) return null;
     if (cachedAuthInfo) return cachedAuthInfo;
-    const authInfo = JSON.parse(document.cookie) as AuthInfo;
+    const authInfo = getAuthInfoFromCookie();
     cachedAuthInfo = authInfo;
-
     return authInfo;
 }
 
 
 export const checkLogin = (): boolean => {
-    console.log(document.cookie);
     return document.cookie.length !== 0;
 }
