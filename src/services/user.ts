@@ -9,7 +9,10 @@ export type UserInfo = {
     display_name: string
 }
 
-export const getCurrentUserInfo = async ()  => {
+export const getCurrentUserInfo = async (): Promise<UserInfo | null>  => {
     let res = await api.get(USER_ENDPOINTS.ME);
-    console.log(res.data);
+    if (res.status === 200) {
+        return res.data as UserInfo;
+    }
+    return null;
 }

@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { getToken, saveAuthInfo } from '../services/auth';
+import { fetchAuthInfo } from '../app/authReducers';
+import { useAppDispatch, useAppSelector } from '../app/store';
 
 const LoadingLoginPage = () => {
     const [searchParams, _] = useSearchParams();
-    const [isLogin, setIsLogin] = useState(false);
-
+    let isLogin = useAppSelector(state => state.authReducers.isLogin);
     let code = searchParams.get("code");
+    let dispatch = useAppDispatch();
 
     useEffect(() => {
         if (code) {
-            getToken(code).then(authInfo => {
-                if (authInfo) {
-                    saveAuthInfo(authInfo);
-                    setIsLogin(true);
-                }
-            });
+            dispatch(fetchAuthInfo(code));
         }
     }, []);
 

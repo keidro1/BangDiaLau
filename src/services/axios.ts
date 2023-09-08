@@ -14,9 +14,10 @@ api.interceptors.request.use(config => {
 });
 
 api.interceptors.response.use(response => {
+  console.log(response);
   return response;
 }, (error: AxiosError) => {
-  if (error.status === 401) {
+  if (error.response?.status === 401) {
     const authInfo = getAuthInfo();
     if (authInfo && authInfo.refresh_token) {
         refreshToken(authInfo.refresh_token);
