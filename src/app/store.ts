@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch } from 'react-redux'
 import authReducers from './authReducers'
+import trackReducers from './trackReducers'
 import { useSelector } from 'react-redux'
 
 export const store = configureStore({
   reducer: {
-    authReducers
+    authReducers,
+    trackReducers,
   },
 })
 

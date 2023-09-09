@@ -6,7 +6,6 @@ import FavoritePage from '../pages/FavoritePage';
 import ProfilePage from '../pages/ProfilePage';
 import LoadingLoginPage from '../pages/LoadingLoginPage';
 import { useAppDispatch, useAppSelector } from './store';
-import { checkLogin, getAuthInfo } from '../services/auth';
 import { fetchAuthInfo, fetchUserInfo } from './authReducers';
 
 const App = () => {
