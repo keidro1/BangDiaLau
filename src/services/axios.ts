@@ -14,7 +14,6 @@ api.interceptors.request.use(config => {
 });
 
 api.interceptors.response.use(response => {
-  console.log(response);
   return response;
 }, (error: AxiosError) => {
   if (error.response?.status === 401) {
