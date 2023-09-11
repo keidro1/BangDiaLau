@@ -7,6 +7,8 @@ import ProfilePage from '../pages/ProfilePage';
 import LoadingLoginPage from '../pages/LoadingLoginPage';
 import { useAppDispatch, useAppSelector } from './store';
 import { fetchAuthInfo, fetchUserInfo } from './authReducers';
+import { getCurrentUserPlaylist } from '../services/playlist';
+import { getUserPlaylistWithQuery } from './playlistReducers';
 
 const App = () => {
   const isLogin = useAppSelector(state => state.authReducers.isLogin);
@@ -21,6 +23,7 @@ const App = () => {
   useEffect(() => {
     if (isLogin) {
       dispatch(fetchUserInfo());
+      dispatch(getUserPlaylistWithQuery({offset: 0}));
     }
   }, [isLogin]);
   return (
