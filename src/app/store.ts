@@ -2,13 +2,16 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch } from 'react-redux'
 import authReducers from './authReducers'
 import trackReducers from './trackReducers'
+import searchReducers from './searchReducers'
 import playlistReducers from './playlistReducers'
 import { useSelector } from 'react-redux'
+
 
 export const store = configureStore({
   reducer: {
     authReducers,
     trackReducers,
+    searchReducers,
     playlistReducers,
   },
 })
