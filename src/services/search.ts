@@ -7,7 +7,7 @@ const enum SEARCH_ENDPOINTS {
 }
 
 export interface SearchItems {
-    tracks: [Track]
+    tracks: Track[]
 }
 
 export interface SearchQuery {

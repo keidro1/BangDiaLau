@@ -39,7 +39,6 @@ const Sidebar = () => {
 
     // Lấy tên của playlist đầu tiên nếu có
     const playlistName = userPlaylists?.items[0]?.name || '';
-  
 
   return (
     <div className='text-gray-500 px-5 pt-5 pb-36 text-xs lg:text-sm border-r border-gray-900 h-screen overflow-y-scroll scrollbar-hidden sm:max-w-[12rem] lg:max-w-[15rem] hidden md:block'>
