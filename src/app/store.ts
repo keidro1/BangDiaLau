@@ -4,6 +4,8 @@ import authReducers from './authReducers'
 import trackReducers from './trackReducers'
 import searchReducers from './searchReducers'
 import playlistReducers from './playlistReducers'
+import appReducers from './appReducers'
+
 import { useSelector } from 'react-redux'
 
 
@@ -13,6 +15,7 @@ export const store = configureStore({
     trackReducers,
     searchReducers,
     playlistReducers,
+    appReducers,
   },
 })
 

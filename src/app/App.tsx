@@ -9,9 +9,13 @@ import { useAppDispatch, useAppSelector } from './store';
 import { fetchAuthInfo, fetchUserInfo } from './authReducers';
 import { getCurrentUserPlaylist } from '../services/playlist';
 import { getUserPlaylistWithQuery } from './playlistReducers';
+import { getTrackById } from './trackReducers';
+import { getCurrentUserPlayingTrack, setTrack } from './appReducers';
 
 const App = () => {
   const isLogin = useAppSelector(state => state.authReducers.isLogin);
+  const track = useAppSelector(state => state.trackReducers.track);
+
   const dispatch = useAppDispatch();
   const [retryCheckLogin, setRetryCheckLogin] = useState(false);
   if (!retryCheckLogin && !isLogin) {
@@ -24,8 +28,10 @@ const App = () => {
     if (isLogin) {
       dispatch(fetchUserInfo());
       dispatch(getUserPlaylistWithQuery({offset: 0}));
+      dispatch(getCurrentUserPlayingTrack());
     }
   }, [isLogin]);
+
   return (
     <Router>
       <Routes>
