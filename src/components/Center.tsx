@@ -5,8 +5,8 @@ import { useAppSelector } from '../app/store';
 
 function Center() {
 	
-	const userPlaylists = useAppSelector(state => state.playlist.userPlaylist); // Lấy thông tin danh sách playlists từ Redux
-
+	const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist); // Lấy thông tin danh sách playlists từ Redux
+	if (!userPlaylists) return <p>no</p>;
 	return (
 		<div className='bg-gradient-to-b from-green-600 flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hidden'>
 			

@@ -35,7 +35,7 @@ const Sidebar = () => {
   };
 
     // Lấy danh sách playlist từ Redux state
-    const userPlaylists = useAppSelector(state => state.playlist.userPlaylist);
+    const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist);
 
     // Lấy tên của playlist đầu tiên nếu có
     const playlistName = userPlaylists?.items[0]?.name || '';
