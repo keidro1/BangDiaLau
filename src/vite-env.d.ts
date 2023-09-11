@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-interface importmetaenv {
-    vite_port?: string;
-    vite_auth_token?: string;
-  }
+interface ImportMetaEnv {
+  VITE_PORT?: string;
+  VITE_AUTH_TOKEN?: string;
+}

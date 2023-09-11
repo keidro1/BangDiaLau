@@ -36,7 +36,7 @@ export const logout = () => {
 
 export const login = () => {
     let state = generateRandomString(16);
-    let scope = 'user-read-private user-read-email';
+    let scope = 'user-read-email user-read-private user-library-read user-top-read user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-follow-read playlist-read-private playlist-read-collaborative streaming';
     window.location.replace('https://accounts.spotify.com/authorize?' +
     queryString.stringify({
       response_type: 'code',

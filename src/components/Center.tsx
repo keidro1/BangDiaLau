@@ -11,24 +11,24 @@ function Center() {
 		
 			
 			<section className='flex items-end space-x-7  h-80 p-8'>
+				
+					<img src="https://yt3.googleusercontent.com/ytc/AOPolaRXKUnnsqQflxQj4WdIn4toZCSvgf83e8htqe-r=s176-c-k-c0x00ffffff-no-rj-mo" alt="" />
 
+					<div className="">
 					<p>Playlist</p>
-
 					<h1 className='text-2xl font-bold md:text-3xl xl:text-5xl cursor-pointer'>
 
 								Long oc luoc
 
 					</h1>
+					</div>
 			</section>
 
 			<div>
 				<Song/>
 				<Song/>
 				<Song/>	
-				<Song/>
-				<Song/>
-				<Song/>
-				<Song/>
+
 			</div>
 
 		</div>
