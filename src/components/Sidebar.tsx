@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { FaHome, FaSearch, FaBook, FaPlus, FaGratipay, FaLayerGroup  } from 'react-icons/fa';
 import IconSidebar from './IconSidebar';
 import LoginButton from './LoginButton';
-import { useAppSelector } from '../app/store';
+import { useAppDispatch, useAppSelector } from '../app/store';
 import LogoutButton from './LogoutButton';
+import { searchTrackWithQuery } from '../app/searchReducers';
 
 
 const Sidebar = () => {
@@ -11,6 +12,8 @@ const Sidebar = () => {
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useAppDispatch();
 
   const handleSearchIconClick = () => {
     setIsSearching(true);
@@ -22,7 +25,7 @@ const Sidebar = () => {
 
   const handleSearchEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      setIsSearching(false);
+      dispatch(searchTrackWithQuery({q: searchTerm, offset: 0}));
     }
   };
 
