@@ -3,11 +3,14 @@ import Song from '../components/Song'
 import { useAppDispatch, useAppSelector } from '../app/store';
 import { Playlist } from '../services/playlist';
 import { getEveryTrackFromSearchItems, loadMore, setIsLoading } from '../app/searchReducers';
-import { getPlaylistWithId, loadMorePlaylistItems } from '../app/playlistReducers';
+import { getPlaylistWithId, loadMorePlaylistItems, setSelectedPlaylist } from '../app/playlistReducers';
+import { Track } from '../services/track';
+import { setCurrentPlayingPlaylistContext, setCurrentPlayingPlaylistItem, setTrack } from '../app/appReducers';
 
 
 const Center = () => {
-	
+	const isLogin = useAppSelector(state => state.authReducers.isLogin);
+
 	const searchTrack = useAppSelector(state => state.searchReducers.searchTrack);
 	const isSearching = useAppSelector(state => state.searchReducers.isSearching);
 	const isLoading = useAppSelector(state => state.searchReducers.isLoading);
@@ -91,11 +94,16 @@ const Center = () => {
 		}
 	}, [playlistTracks]);
 
+	const handlePlayInPlaylist = (item: Track, index: number) => {
+		dispatch(setCurrentPlayingPlaylistItem(index));
+		dispatch(setCurrentPlayingPlaylistContext(selectedPlaylist!.uri));
+	}
+
 
 	return (
 		<div className='bg-gradient-to-b from-green-600 flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hidden' ref={divRef}>
 			
-		<h1 className="ml-10 max-w-md h-50 text-green-400 leading-loose tracking-wider md:text-4xl lg:text-6xl x1:text-6xl p-8">Welcome to Bang Dia Lau </h1>
+		<h1 className="ml-10 max-w-md h-50 text-green-400 leading-loose tracking-wider md:text-4xl lg:text-6xl x1:text-6xl p-8">{isLogin ? 'Welcome to Bang Dia Lau' : 'Please login with a Spotify Premium Account' } </h1>
 			
 			{
 			isSearching ?
@@ -104,7 +112,9 @@ const Center = () => {
 				<p>Showing {tracks.length} in {searchTrack?.tracks.total}</p>
 				{tracks.map((track, index) => 
 				<div key={track.id}>
-					<Song track={track} index={index + 1}/>
+					<Song track={track} index={index + 1} play={() => {
+							dispatch(setTrack(track));
+						}}/>
 				</div>
 				)}
 				</>
@@ -134,7 +144,7 @@ const Center = () => {
 				{ 
 					playlistTracks.map((item, index) => 
 						<div key={item.id}>
-							<Song track={item} index={index + 1}/>
+							<Song track={item} index={index + 1} play={() => handlePlayInPlaylist(item, index)}/>
 						</div>
 					)
 				}

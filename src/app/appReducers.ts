@@ -7,13 +7,17 @@ interface AppState {
     currentPlaylist: Playlist | null
     currentPlayingTrackId: string | null
     volume: number
+    currentPlayingPlaylistItem: number
+    currentPlayingPlaylistContext: string | null
 }
   
 const initialState: AppState = {
     currentTrack: null,
     currentPlaylist: null,
     volume: 0,
-    currentPlayingTrackId: null
+    currentPlayingTrackId: null,
+    currentPlayingPlaylistItem: -1,
+    currentPlayingPlaylistContext: null,
 };
 
 export const getCurrentUserPlayingTrack = createAsyncThunk<CurrentPlayingTrack, void>('track/getCurrentPlayingTrack', 
@@ -29,10 +33,20 @@ export const appSlice = createSlice({
     reducers: {
         setTrack: (state: AppState, action: PayloadAction<CurrentPlayingTrack | Track>) => {
             state.currentTrack = action.payload;
+            state.currentPlayingPlaylistItem = -1;
             state.currentPlaylist = null;
+            state.currentPlayingPlaylistContext = null;
         },
         setCurrentPlayingTrackId: (state: AppState, action: PayloadAction<string>) => {
             state.currentPlayingTrackId = action.payload;
+        },
+        setCurrentPlayingPlaylistItem: (state: AppState, action: PayloadAction<number>) => {
+            state.currentPlayingPlaylistItem = action.payload;
+            state.currentTrack = null;
+        },
+        setCurrentPlayingPlaylistContext: (state: AppState, action: PayloadAction<string>) => {
+            state.currentPlayingPlaylistContext = action.payload;
+            state.currentTrack = null;
         },
         setPlaylist: (state: AppState, action: PayloadAction<Playlist>) => {
             state.currentPlaylist = action.payload;
@@ -44,7 +58,6 @@ export const appSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getCurrentUserPlayingTrack.fulfilled, (state, action) => {
-            console.log(action.payload);
             state.currentTrack = action.payload;
             state.currentPlaylist = null;
         });
@@ -55,5 +68,5 @@ export const appSlice = createSlice({
     },
 });
 
-export const { setTrack, setVolume, setCurrentPlayingTrackId } = appSlice.actions;
+export const { setTrack, setVolume, setCurrentPlayingTrackId, setCurrentPlayingPlaylistItem, setCurrentPlayingPlaylistContext } = appSlice.actions;
 export default appSlice.reducer;

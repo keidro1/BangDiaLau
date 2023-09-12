@@ -17,6 +17,7 @@ const Sidebar = () => {
 
   const handleSearchIconClick = () => {
     dispatch(setIsSearching(true));
+    dispatch(setSelectedPlaylist(null));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ const Sidebar = () => {
 
   const handleSearchCancel = () => {
     dispatch(setIsSearching(false));
+    dispatch(setSelectedPlaylist(null));
     dispatch(setQuery(''));
   };
 

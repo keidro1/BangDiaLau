@@ -33,6 +33,9 @@ const Player = () => {
 	const dispatch = useAppDispatch();
 	const [player, setPlayer] = useState(null)
 	const currentTrack = useAppSelector(state => state.appReducers.currentTrack);
+	const currentPlayingPlaylistItem = useAppSelector(state => state.appReducers.currentPlayingPlaylistItem);
+	const currentPlayingPlaylistContext = useAppSelector(state => state.appReducers.currentPlayingPlaylistContext);
+
 	const volume = useAppSelector(state => state.appReducers.volume);
 	const isLogin = useAppSelector(state => state.authReducers.isLogin);
 
@@ -125,8 +128,13 @@ const Player = () => {
 				if (b) player.togglePlay();
 			});
 		}
-	}, [currentTrack, player, isActive]);
 
+		if (currentPlayingPlaylistItem != -1 && currentPlayingPlaylistContext && player && isActive) {
+			startPlayback({device_id: deviceId, context_uri: currentPlayingPlaylistContext, offset: {position: currentPlayingPlaylistItem} }).then((b) => {
+				if (b) player.togglePlay();
+			});
+		}
+	}, [currentTrack, currentPlayingPlaylistItem, currentPlayingPlaylistContext, player, isActive]);
 
 	useEffect(() => {
 		if (!player) return;

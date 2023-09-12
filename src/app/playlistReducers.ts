@@ -45,10 +45,11 @@ export const playlistSlice = createSlice({
     name: 'playlist',
     initialState: initialState,
     reducers: {
-        setSelectedPlaylist: (state: PlaylistState, action: PayloadAction<Playlist>) => {
+        setSelectedPlaylist: (state: PlaylistState, action: PayloadAction<Playlist | null>) => {
             state.selectedPlaylist = action.payload;
             state.hasReachMax = false;
             state.offset = 0;
+            state.tracks = [];
         },
     },
     extraReducers: (builder) => {
@@ -72,7 +73,6 @@ export const playlistSlice = createSlice({
             }
             state.offset += action.payload.limit;
             state.tracks = [...state.tracks, ...action.payload.items.map(e => e.track)];
-            console.log(state.tracks);
         })
     },
 });

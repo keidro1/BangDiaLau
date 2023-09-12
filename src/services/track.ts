@@ -86,7 +86,7 @@ export interface StartPlaybackParams {
 }
 
 interface Offset {
-    offset: number | null
+    position: number | null
     uri: string | null
 }
 

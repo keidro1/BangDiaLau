@@ -4,7 +4,7 @@ import { Track } from '../services/track';
 import { setTrack } from '../app/appReducers';
 import { FaPlay } from 'react-icons/fa';
 
-const Song = (props: {track: Track, index: number}) => {
+const Song = (props: {track: Track, index: number, play: any}) => {
 	const track = props.track;
 	const dispatch = useAppDispatch();
 	const currentTrackId = useAppSelector(state => state.appReducers.currentPlayingTrackId)
@@ -19,7 +19,11 @@ const Song = (props: {track: Track, index: number}) => {
 	const handleMouseOutEvent = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		setIsHovering(false);
-	  };
+	};
+
+	const handleClick = () => {
+		props.play();
+	};
 	return (
 		<div
 			className='grid grid-cols-2 text-gray-500 px-5 py-4 hover:bg-gray-800 rounded-lg cursor-pointer'
@@ -30,7 +34,7 @@ const Song = (props: {track: Track, index: number}) => {
 						isPlaying ?
 						<FaPlay className='icon-playback' fill='green'/>
 						: isHovering ?
-						<FaPlay className='icon-playback' onClick={() => dispatch(setTrack(track))}/>
+						<FaPlay className='icon-playback' onClick={handleClick}/>
 						:
 						<p>{props.index}</p>
 					}
