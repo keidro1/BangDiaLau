@@ -31,20 +31,20 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: initialState,
     reducers: {
-        setTrack: (state: AppState, action: PayloadAction<CurrentPlayingTrack | Track>) => {
+        setTrack: (state: AppState, action: PayloadAction<CurrentPlayingTrack | Track | null>) => {
             state.currentTrack = action.payload;
             state.currentPlayingPlaylistItem = -1;
             state.currentPlaylist = null;
             state.currentPlayingPlaylistContext = null;
         },
-        setCurrentPlayingTrackId: (state: AppState, action: PayloadAction<string>) => {
+        setCurrentPlayingTrackId: (state: AppState, action: PayloadAction<string | null>) => {
             state.currentPlayingTrackId = action.payload;
         },
         setCurrentPlayingPlaylistItem: (state: AppState, action: PayloadAction<number>) => {
             state.currentPlayingPlaylistItem = action.payload;
             state.currentTrack = null;
         },
-        setCurrentPlayingPlaylistContext: (state: AppState, action: PayloadAction<string>) => {
+        setCurrentPlayingPlaylistContext: (state: AppState, action: PayloadAction<string | null>) => {
             state.currentPlayingPlaylistContext = action.payload;
             state.currentTrack = null;
         },

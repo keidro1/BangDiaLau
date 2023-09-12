@@ -4,14 +4,11 @@ import HomePage from '../pages/HomePage';
 import LoadingLoginPage from '../pages/LoadingLoginPage';
 import { useAppDispatch, useAppSelector } from './store';
 import { fetchAuthInfo, fetchUserInfo } from './authReducers';
-import { getCurrentUserPlaylist } from '../services/playlist';
 import { getUserPlaylistWithQuery } from './playlistReducers';
-import { getTrackById } from './trackReducers';
-import { getCurrentUserPlayingTrack, setTrack } from './appReducers';
+import { getCurrentUserPlayingTrack, setCurrentPlayingPlaylistItem, setCurrentPlayingTrackId, setTrack } from './appReducers';
 
 const App = () => {
   const isLogin = useAppSelector(state => state.authReducers.isLogin);
-  const track = useAppSelector(state => state.trackReducers.track);
 
   const dispatch = useAppDispatch();
   const [retryCheckLogin, setRetryCheckLogin] = useState(false);
@@ -26,6 +23,11 @@ const App = () => {
       dispatch(fetchUserInfo());
       dispatch(getUserPlaylistWithQuery({offset: 0}));
       dispatch(getCurrentUserPlayingTrack());
+    } else {
+      dispatch(setCurrentPlayingTrackId(null));
+      dispatch(setTrack(null));
+      dispatch(setCurrentPlayingPlaylistItem(-1));
+
     }
   }, [isLogin]);
 
