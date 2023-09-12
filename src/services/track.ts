@@ -1,11 +1,13 @@
+import queryString from "query-string"
 import api from "./axios"
 
 const enum TRACK_ENDPOINTS {
     GET_TRACK = 'v1/tracks/',
     GET_CURRENT_PLAYING_TRACK = 'v1/me/player/currently-playing?additional_types=track',
-    PLAYER_PLAY = 'v1/me/player/play'
+    PLAYER_PLAY = 'v1/me/player/play',
+    TOGGLE_PLAYBACK_SHUFFLE = 'v1/me/player/shuffle',
+    SET_REPEAT_MODE = 'v1/me/player/repeat'
 }
-
 export interface Track {
     album_type: string
     artists: Artist[]
@@ -90,6 +92,28 @@ interface Offset {
 
 export const startPlayback = async (params: StartPlaybackParams): Promise<boolean>  => {
     let res = await api.put(TRACK_ENDPOINTS.PLAYER_PLAY + '?device_id=' + params.device_id, params);
+    if (res.status === 204) {
+        return true;
+    }
+    return false;
+}
+
+export const togglePlaybackShuffle = async (shuffle: boolean, deviceId: string): Promise<boolean>  => {
+    let res = await api.put(TRACK_ENDPOINTS.TOGGLE_PLAYBACK_SHUFFLE + '?' + queryString.stringify({
+        state: shuffle,
+        device_id: deviceId,
+    }));
+    if (res.status === 204) {
+        return shuffle;
+    }
+    return shuffle;
+}
+
+export const setPlaybackRepeatMode = async (repeatMode: string, deviceId: string): Promise<boolean>  => {
+    let res = await api.put(TRACK_ENDPOINTS.SET_REPEAT_MODE + '?' + queryString.stringify({
+        state: repeatMode,
+        device_id: deviceId,
+    }));
     if (res.status === 204) {
         return true;
     }
