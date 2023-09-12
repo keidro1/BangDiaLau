@@ -1,5 +1,5 @@
  // @ts-nocheck
- import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	FaForward,
 	FaPlay,
@@ -14,7 +14,7 @@ import {
 import { getAuthInfo } from '../services/auth';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import { setPlaybackRepeatMode, startPlayback, togglePlaybackShuffle } from '../services/track';
-import { setVolume } from '../app/appReducers';
+import { setCurrentPlayingTrackId, setVolume } from '../app/appReducers';
 
 
 
@@ -91,6 +91,7 @@ const Player = () => {
 				setSongName(state.track_window.current_track.name);
 				setArtistName(state.track_window.current_track.artists.map(e => e.name).join(', '));
 				setImage(state.track_window.current_track.album.images[0].url);
+				dispatch(setCurrentPlayingTrackId(state.track_window.current_track.id))
                 player.getCurrentState().then(st => { 
                     (!st) ? setActive(false) : setActive(true) 
                 });

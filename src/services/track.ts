@@ -1,5 +1,6 @@
 import queryString from "query-string"
 import api from "./axios"
+import { Album } from "./playlist"
 
 const enum TRACK_ENDPOINTS {
     GET_TRACK = 'v1/tracks/',
@@ -9,12 +10,11 @@ const enum TRACK_ENDPOINTS {
     SET_REPEAT_MODE = 'v1/me/player/repeat'
 }
 export interface Track {
-    album_type: string
+    album: Album
     artists: Artist[]
     external_urls: ExternalUrls
     href: string
     id: string
-    images: Image[]
     is_playable: boolean
     name: string
     release_date: string
