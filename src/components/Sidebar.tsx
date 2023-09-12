@@ -4,19 +4,18 @@ import IconSidebar from './IconSidebar';
 import LoginButton from './LoginButton';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import LogoutButton from './LogoutButton';
-import { searchTrackWithQuery } from '../app/searchReducers';
+import { searchTrackWithQuery, setIsSearching } from '../app/searchReducers';
 
 
 const Sidebar = () => {
   const userInfo = useAppSelector(state => state.authReducers.user);
 
-  const [isSearching, setIsSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useAppDispatch();
-
+  const isSearching = useAppSelector(state => state.searchReducers.isSearching);
   const handleSearchIconClick = () => {
-    setIsSearching(true);
+    dispatch(setIsSearching(true));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +29,7 @@ const Sidebar = () => {
   };
 
   const handleSearchCancel = () => {
-    setIsSearching(false);
+    dispatch(setIsSearching(false));
     setSearchTerm('');
   };
 

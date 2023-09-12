@@ -4,7 +4,7 @@ import { useAppSelector } from '../app/store';
 import { Playlist } from '../services/playlist';
 
 
-function Center() {
+const Center = () => {
 	
 	const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist); // Lấy thông tin danh sách playlists từ Redux
 
