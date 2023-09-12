@@ -86,8 +86,10 @@ const Center = () => {
 	}, [selectedPlaylist]);
 
 	useEffect(() => {
-		console.log(selectedPlaylistItems);
-	}, [selectedPlaylistItems]);
+		if (playlistTracks.length != 0) {
+			dispatch(setIsLoading(false));
+		}
+	}, [playlistTracks]);
 
 
 	return (

@@ -72,6 +72,7 @@ export const playlistSlice = createSlice({
             }
             state.offset += action.payload.limit;
             state.tracks = [...state.tracks, ...action.payload.items.map(e => e.track)];
+            console.log(state.tracks);
         })
     },
 });

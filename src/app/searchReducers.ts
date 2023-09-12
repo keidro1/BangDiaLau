@@ -29,7 +29,7 @@ async (query: SearchQuery, thunkAPI) => {
     return thunkAPI.rejectWithValue(null);
 });
 
-export const loadMore = createAsyncThunk<SearchItems, SearchQuery>('search/searchTrackWithQuery', 
+export const loadMore = createAsyncThunk<SearchItems, SearchQuery>('search/loadMore', 
 async (query: SearchQuery, thunkAPI) => {
     const searchItems = await searchTrack(query);
     if (searchItems) return searchItems;
