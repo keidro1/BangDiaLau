@@ -37,8 +37,13 @@ const Sidebar = () => {
     // Lấy danh sách playlist từ Redux state
     const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist);
 
-    // Lấy tên của playlist đầu tiên nếu có
-    const playlistName = userPlaylists?.items[0]?.name || '';
+    const handlePlaylistClick = (playlist) => {
+      setIsSearching(false);
+      setSearchTerm('');
+      dispatch(searchTrackWithQuery({ q: '', offset: 0 })); // Xóa kết quả tìm kiếm nếu có
+      // Gọi hàm handlePlaylistClick để cập nhật playlist được chọn
+      handlePlaylistClick(playlist);
+    };
 
   return (
     <div className='text-gray-500 px-5 pt-5 pb-36 text-xs lg:text-sm border-r border-gray-900 h-screen overflow-y-scroll scrollbar-hidden sm:max-w-[12rem] lg:max-w-[15rem] hidden md:block'>
@@ -88,7 +93,13 @@ const Sidebar = () => {
 
 				  <hr className='border-t-[0.1px] border-gray-900' />
 
-          <p className="cursor-pointer hover:text-white">{playlistName}</p>
+          {userPlaylists?.items.map((playlist, index) => (
+            <p key={index} className="cursor-pointer hover:text-white" onClick={() => handlePlaylistClick(playlist)}>
+              
+              {playlist.name}
+              
+            </p>
+          ))}
 
         </>
          )}
