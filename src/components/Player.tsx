@@ -111,13 +111,19 @@ const Player = () => {
 		if (currentTrack && player && isActive) {
 			if (currentTrack.item) {
 				if (currentTrack.context) {
-					startPlayback({device_id: deviceId, context_uri: currentTrack.context.uri});
+					startPlayback({device_id: deviceId, context_uri: currentTrack.context.uri}).then((b) => {
+						if (b) player.togglePlay();
+					});
 					return;
 				}
-				startPlayback({device_id: deviceId, uris: [currentTrack.item.uri], position_ms: currentTrack.position_ms});
+				startPlayback({device_id: deviceId, uris: [currentTrack.item.uri], position_ms: currentTrack.position_ms}).then((b) => {
+					if (b) player.togglePlay();
+				});
 				return;
 			}
-			startPlayback({device_id: deviceId, uris: [currentTrack.uri] });
+			startPlayback({device_id: deviceId, uris: [currentTrack.uri] }).then((b) => {
+				if (b) player.togglePlay();
+			});
 		}
 	}, [currentTrack, player, isActive]);
 

@@ -77,10 +77,10 @@ export const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(searchTrackWithQuery.fulfilled, (state, action) => {
             state.searchTrack = action.payload;
-            state.offset++;
             if (action.payload.tracks.items.length < action.payload.tracks.limit) {
                 state.hasReachMax = true;
             }
+            state.offset += action.payload.tracks.limit;
         });
         builder.addCase(searchTrackWithQuery.rejected, (state, action) => {
             state.searchTrack = null;
