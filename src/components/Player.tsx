@@ -7,12 +7,16 @@ import {
 	FaVolumeUp,
 	FaBackward,
 	FaDice,
-	FaPause
+	FaPause,
+	FaVolumeDown,
+	FaVolumeMute
 } from 'react-icons/fa';
 import { getAuthInfo } from '../services/auth';
 import { useAppDispatch, useAppSelector } from '../app/store';
-import { startPlayback } from '../services/track';
+import { setPlaybackRepeatMode, startPlayback, togglePlaybackShuffle } from '../services/track';
 import { setVolume } from '../app/appReducers';
+
+
 
 const msToHMS = (ms: number) => {
     let seconds = ms / 1000;
@@ -25,8 +29,6 @@ const msToHMS = (ms: number) => {
     return minutes +":"+  (seconds >= 10 ? seconds : `0${seconds}`);
 }
 
-// let isSeeking = false;
-
 const Player = () => {
 	const dispatch = useAppDispatch();
 	const [player, setPlayer] = useState(null)
@@ -35,6 +37,11 @@ const Player = () => {
 	const isLogin = useAppSelector(state => state.authReducers.isLogin);
 
 	const [isPaused, setPaused] = useState(true);
+	const [repeatMode, setRepeatMode] = useState(0);
+	const [shuffle, setShuffle] = useState(false);
+	const [prevVolume, setPrevVolume] = useState(0);
+	const [mute, setMute] = useState(false);
+
     const [isActive, setActive] = useState(false);
 	const [isSeeking, setIsSeeking] = useState(null);
 	const [deviceId, setDeviceId] = useState(null);
@@ -43,8 +50,7 @@ const Player = () => {
 	const [songName, setSongName] = useState('');
 	const [artistName, setArtistName] = useState('');
 	const [image, setImage] = useState('');
-	const [posTimeout, setPosTimeout] = useState(null);
-
+	const [_, setCurrentTimeout] = useState(null);
 	useEffect(() => {
 		if (!isLogin) return;
 	
@@ -79,6 +85,8 @@ const Player = () => {
                 }
                 setPaused(state.paused);
 				setDuration(state.duration);
+				setShuffle(state.shuffle);
+				setRepeatMode(state.repeat_mode);
 				if (!isSeeking) setPosition(state.position);
 				setSongName(state.track_window.current_track.name);
 				setArtistName(state.track_window.current_track.artists.map(e => e.name).join(', '));
@@ -100,7 +108,6 @@ const Player = () => {
 
 	useEffect(() => {
 		if (currentTrack && player && isActive) {
-			console.log(typeof currentTrack);
 			if (currentTrack.item) {
 				if (currentTrack.context) {
 					startPlayback({device_id: deviceId, context_uri: currentTrack.context.uri});
@@ -113,15 +120,15 @@ const Player = () => {
 		}
 	}, [currentTrack, player, isActive]);
 
+
 	useEffect(() => {
+		if (!player) return;
 		if (isPaused || isSeeking) return;
-		setTimeout(() => setPosition((p) => {
-			if (isSeeking) {
-				return isSeeking;
-			}
-			return p + 1000;
-		}), 1000);
-	}, [isPaused, position]);
+		setCurrentTimeout(setTimeout(() => player.getCurrentState().then(st => { 
+			if (!st) return;
+			setPosition(st.position);
+		}), 1000));
+	}, [isPaused, position, player, isSeeking]);
 
 	const changePlaybackState = () => {
 		player.togglePlay();
@@ -130,7 +137,9 @@ const Player = () => {
 	const handleVolumeChange = (newVolume) => {
 		if (newVolume) {
 			dispatch(setVolume(newVolume.target.value));
-			player.setVolume(newVolume.target.value);
+			player.setVolume(newVolume.target.value).then(() => {
+				if (newVolume.target.value > 0) setMute(false);
+			});
 		}
 	}
 
@@ -142,9 +151,40 @@ const Player = () => {
 
 	useEffect(() => {
 		if (isSeeking) {
+			setCurrentTimeout(null);
 			player.seek(isSeeking).then(() => setIsSeeking(null));
 		}
 	}, [isSeeking]);
+
+	const skipToNext = () => {
+		if (!player) return;
+		player.nextTrack();
+	}
+	
+	const skipToPrev = () => {
+		if (!player) return;
+		player.previousTrack();
+	}
+	
+	const toggleShuffle = () => {
+		if (!player) return;
+		togglePlaybackShuffle(!shuffle, deviceId);
+	}
+
+	const changeRepeatMode = () => {
+		if (!player) return;
+		setPlaybackRepeatMode(repeatMode === 0 ? 'context' : 'off', deviceId);
+	}
+
+	const unMute = () => {
+		dispatch(setVolume(prevVolume));
+		player.setVolume(prevVolume).then(() => setMute(false));
+	}
+	const toggleMute = () => {
+		setPrevVolume(volume);
+		dispatch(setVolume(0));
+		player.setVolume(0).then(() => setMute(true));
+	}
 
 	return (
 		<div className='h-24 bg-gradient-to-b from-black to-gray-900 grid grid-cols-3 text-xs md:text-base px-2 md:px-8'>
@@ -163,18 +203,18 @@ const Player = () => {
 			<div className='flex flex-col h-full'>
 				<div className='h-3/5 flex justify-evenly items-center'>
 
-					<FaDice className='icon-playback'/>
+					<FaDice className='icon-playback' fill={shuffle ? 'green' : 'white'} onClick={toggleShuffle}/>
 				
-					<FaBackward className='icon-playback'/>
+					<FaBackward className='icon-playback' onClick={skipToPrev}/>
 			
 					{ !isPaused ?
 					<FaPause className='icon-playback' onClick={changePlaybackState}/>
 					: <FaPlay className='icon-playback' onClick={changePlaybackState}/>
 					}
 
-					<FaForward className='icon-playback'/>
+					<FaForward className='icon-playback' onClick={skipToNext}/>
 					
-					<FaReply className='icon-playback' />
+					<FaReply className='icon-playback' fill={repeatMode === 0 ? 'white' : 'green'} onClick={changeRepeatMode}/>
 
 				</div>
 				
@@ -188,7 +228,14 @@ const Player = () => {
 
 			{/* Right */}
 			<div className='flex justify-end items-center pr-5 space-x-3 md:space-x-4'>
-				<FaVolumeUp className='icon-playback' />
+				{
+					mute ?
+					<FaVolumeMute className='icon-playback' onClick={unMute}/>
+					: volume >= 0.5 ?
+					<FaVolumeUp className='icon-playback' onClick={toggleMute}/>
+					:
+					<FaVolumeDown className='icon-playback' onClick={toggleMute}/>
+				}
 				<input
 					type='range'
 					min={0}
