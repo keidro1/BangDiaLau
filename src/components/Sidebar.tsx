@@ -4,33 +4,35 @@ import IconSidebar from './IconSidebar';
 import LoginButton from './LoginButton';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import LogoutButton from './LogoutButton';
-import { searchTrackWithQuery, setIsSearching } from '../app/searchReducers';
+import { searchTrackWithQuery, setIsSearching, setQuery } from '../app/searchReducers';
 
 
 const Sidebar = () => {
   const userInfo = useAppSelector(state => state.authReducers.user);
 
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useAppDispatch();
   const isSearching = useAppSelector(state => state.searchReducers.isSearching);
+  const q = useAppSelector(state => state.searchReducers.q);
+
   const handleSearchIconClick = () => {
     dispatch(setIsSearching(true));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    dispatch(setQuery(event.target.value));
   };
 
   const handleSearchEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      dispatch(searchTrackWithQuery({q: searchTerm, offset: 0}));
+      dispatch(searchTrackWithQuery({q: q, offset: 0}));
     }
   };
 
   const handleSearchCancel = () => {
     dispatch(setIsSearching(false));
-    setSearchTerm('');
+    dispatch(setQuery(''));
   };
 
     // Lấy danh sách playlist từ Redux state
@@ -38,7 +40,6 @@ const Sidebar = () => {
 
     const handlePlaylistClick = (playlist) => {
       setIsSearching(false);
-      setSearchTerm('');
       dispatch(searchTrackWithQuery({ q: '', offset: 0 })); // Xóa kết quả tìm kiếm nếu có
       // Gọi hàm handlePlaylistClick để cập nhật playlist được chọn
       handlePlaylistClick(playlist);
@@ -64,7 +65,7 @@ const Sidebar = () => {
               type='text'
               className=' peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-300 dark:placeholder:text-neutral-300 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0'
               placeholder='Search'
-              value={searchTerm}
+              value={q}
               onChange={handleSearchChange}
               onKeyDown={handleSearchEnter}
             />

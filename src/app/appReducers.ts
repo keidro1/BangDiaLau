@@ -5,6 +5,7 @@ import { Playlist } from "../services/playlist";
 interface AppState {
     currentTrack: CurrentPlayingTrack | Track |null
     currentPlaylist: Playlist | null
+    currentPlayingTrackId: string | null
     volume: number
 }
   
@@ -12,6 +13,7 @@ const initialState: AppState = {
     currentTrack: null,
     currentPlaylist: null,
     volume: 0,
+    currentPlayingTrackId: null
 };
 
 export const getCurrentUserPlayingTrack = createAsyncThunk<CurrentPlayingTrack, void>('track/getCurrentPlayingTrack', 
@@ -28,6 +30,9 @@ export const appSlice = createSlice({
         setTrack: (state: AppState, action: PayloadAction<CurrentPlayingTrack | Track>) => {
             state.currentTrack = action.payload;
             state.currentPlaylist = null;
+        },
+        setCurrentPlayingTrackId: (state: AppState, action: PayloadAction<string>) => {
+            state.currentPlayingTrackId = action.payload;
         },
         setPlaylist: (state: AppState, action: PayloadAction<Playlist>) => {
             state.currentPlaylist = action.payload;
@@ -50,5 +55,5 @@ export const appSlice = createSlice({
     },
 });
 
-export const { setTrack, setVolume } = appSlice.actions;
+export const { setTrack, setVolume, setCurrentPlayingTrackId } = appSlice.actions;
 export default appSlice.reducer;

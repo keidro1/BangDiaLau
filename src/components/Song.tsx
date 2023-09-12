@@ -1,20 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/store';
-import { FaSmile } from 'react-icons/fa';
 import { Track } from '../services/track';
 import { setTrack } from '../app/appReducers';
+import { FaPlay } from 'react-icons/fa';
 
-const Song = (props: {track: Track}) => {
+const Song = (props: {track: Track, index: number}) => {
 	const track = props.track;
 	const dispatch = useAppDispatch();
-	console.log(track);
+	const currentTrackId = useAppSelector(state => state.appReducers.currentPlayingTrackId)
+	const [isPlaying, setIsPlaying] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+
+	useEffect(() => setIsPlaying(currentTrackId == track.id), [currentTrackId]);
+	const handleMouseOverEvent = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+		setIsHovering(true);
+	};
+	const handleMouseOutEvent = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault();
+		setIsHovering(false);
+	  };
 	return (
 		<div
 			className='grid grid-cols-2 text-gray-500 px-5 py-4 hover:bg-gray-800 rounded-lg cursor-pointer'
-			onClick={() => dispatch(setTrack(track))}
 		>
 			<div className='flex items-center space-x-4'>
-				<div>
+				<button className='items-center' onMouseOver={handleMouseOverEvent} onMouseOut={handleMouseOutEvent}>
+					{
+						isPlaying ?
+						<FaPlay className='icon-playback' fill='green'/>
+						: isHovering ?
+						<FaPlay className='icon-playback' onClick={() => dispatch(setTrack(track))}/>
+						:
+						<p>{props.index}</p>
+					}
+				</button>
+				<div >
 					<img
 						src={track.album.images[0].url}
 						alt='track cover'
