@@ -91,7 +91,6 @@ export const searchSlice = createSlice({
         });
 
         builder.addCase(getEveryTrackFromSearchItems.rejected, (state, action) => {
-            console.log("shit");
         });
     },
 });

@@ -3,11 +3,11 @@ import Song from '../components/Song'
 import { useAppDispatch, useAppSelector } from '../app/store';
 import { Playlist } from '../services/playlist';
 import { getEveryTrackFromSearchItems, loadMore, setIsLoading } from '../app/searchReducers';
+import { getPlaylistWithId, loadMorePlaylistItems } from '../app/playlistReducers';
 
 
 const Center = () => {
 	
-	const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist); // Lấy thông tin danh sách playlists từ Redux
 	const searchTrack = useAppSelector(state => state.searchReducers.searchTrack);
 	const isSearching = useAppSelector(state => state.searchReducers.isSearching);
 	const isLoading = useAppSelector(state => state.searchReducers.isLoading);
@@ -17,7 +17,6 @@ const Center = () => {
 	const q = useAppSelector(state => state.searchReducers.q);
 
 	const dispatch = useAppDispatch();
-	const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null); // Sử dụng state để lưu playlist đang được chọn
 
 	useEffect(() => {
 		if (searchTrack)
@@ -33,7 +32,7 @@ const Center = () => {
 	const divRef = useRef();
 
 	const onScroll = () => {
-		if (isLoading || hasReachMax) return;
+		if (isLoading || (isSearching && hasReachMax) || (selectedPlaylistItems && playlistHasReachMax)) return;
 		if (divRef.current) {
 			const { scrollTop, scrollHeight, clientHeight } = divRef.current;
 			const isNearBottom = scrollTop + clientHeight >= scrollHeight;
@@ -46,6 +45,13 @@ const Center = () => {
 
 	useEffect(() => {
 		if (isLoading) {
+			if (selectedPlaylist) {
+				dispatch(loadMorePlaylistItems({
+					id: selectedPlaylist.id,
+					offset: playlistOffset
+				}));	
+				return;
+			}
 			dispatch(loadMore({
 				q: q,
 				offset: offset
@@ -64,6 +70,26 @@ const Center = () => {
 	}, []);
 
 
+	const selectedPlaylist = useAppSelector(state => state.playlistReducers.selectedPlaylist);
+	const selectedPlaylistItems = useAppSelector(state => state.playlistReducers.selectedPlaylistItems);
+	const playlistOffset = useAppSelector(state => state.playlistReducers.offset);
+	const playlistHasReachMax = useAppSelector(state => state.playlistReducers.hasReachMax);
+	const playlistTracks = useAppSelector(state => state.playlistReducers.tracks);
+
+	useEffect(() => {
+		if (selectedPlaylist) {
+			dispatch(getPlaylistWithId({
+				id: selectedPlaylist.id,
+				offset: 0,
+			}));
+		}
+	}, [selectedPlaylist]);
+
+	useEffect(() => {
+		console.log(selectedPlaylistItems);
+	}, [selectedPlaylistItems]);
+
+
 	return (
 		<div className='bg-gradient-to-b from-green-600 flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hidden' ref={divRef}>
 			
@@ -80,15 +106,14 @@ const Center = () => {
 				</div>
 				)}
 				</>
-				:
-				<>
+				: isLoading ?
+				<p>Loading...</p> :
 				<p>No results</p>
-				</>
 				)
 			:
 			<section className='flex items-end space-x-7 h-80 p-8'>
 				{
-				selectedPlaylist ? ( // Kiểm tra xem selectedPlaylist có tồn tại không
+				selectedPlaylist ? (
 				<>
 					<img src={selectedPlaylist?.images[0]?.url || ''} alt="Playlist Image" className='h-40 w-40 shadow-xl' />
 					<div className="playlists">
@@ -97,13 +122,21 @@ const Center = () => {
 						{selectedPlaylist?.name || ''}
 						</h1>
 					</div>
+					
 				</>
 				): (
     			<p>No playlist selected</p>
-				
 				)}
       		</section>
 			}
+				{ 
+					playlistTracks.map((item, index) => 
+						<div key={item.id}>
+							<Song track={item} index={index + 1}/>
+						</div>
+					)
+				}
+			
 		</div>
 	)
 }

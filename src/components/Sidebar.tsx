@@ -5,12 +5,11 @@ import LoginButton from './LoginButton';
 import { useAppDispatch, useAppSelector } from '../app/store';
 import LogoutButton from './LogoutButton';
 import { searchTrackWithQuery, setIsSearching, setQuery } from '../app/searchReducers';
+import { setSelectedPlaylist } from '../app/playlistReducers';
 
 
 const Sidebar = () => {
   const userInfo = useAppSelector(state => state.authReducers.user);
-
-  // const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useAppDispatch();
   const isSearching = useAppSelector(state => state.searchReducers.isSearching);
@@ -35,14 +34,11 @@ const Sidebar = () => {
     dispatch(setQuery(''));
   };
 
-    // Lấy danh sách playlist từ Redux state
     const userPlaylists = useAppSelector(state => state.playlistReducers.userPlaylist);
 
     const handlePlaylistClick = (playlist) => {
-      setIsSearching(false);
-      dispatch(searchTrackWithQuery({ q: '', offset: 0 })); // Xóa kết quả tìm kiếm nếu có
-      // Gọi hàm handlePlaylistClick để cập nhật playlist được chọn
-      handlePlaylistClick(playlist);
+      dispatch(setIsSearching(false));
+      dispatch(setSelectedPlaylist(playlist));
     };
 
   return (
@@ -83,13 +79,6 @@ const Sidebar = () => {
 
         <IconSidebar icon={FaHome} label='Home' />
         <IconSidebar icon={FaSearch} label='Search' onClick={handleSearchIconClick}/>
-				<IconSidebar icon={FaBook} label='Your Library' />
-
-				  <hr className='border-t-[0.1px] border-gray-900' />
-
-				<IconSidebar icon={FaPlus} label='Create Playlist' />
-				<IconSidebar icon={FaGratipay} label='Liked Songs' />
-				<IconSidebar icon={FaLayerGroup} label='Your episodes' />
 
 				  <hr className='border-t-[0.1px] border-gray-900' />
 

@@ -118,3 +118,26 @@ export const getCurrentUserPlaylist = async (query: UserPlaylistsQuery): Promise
     }
     return null;
 }
+
+export interface PlaylistQuery {
+    id: string
+    offset: number
+}
+
+export interface PlaylistItems{
+    limit: number
+    offset: number
+    total: number
+    items: Item[]
+}
+
+export const getPlaylist = async (query: PlaylistQuery): Promise<PlaylistItems | null>  => {
+    let res = await api.get(PLAYLISTS_ENDPOINTS.GET_PLAYLIST + query.id + '/tracks?' + queryString.stringify({
+        limit: 20,
+        offset: query.offset,
+    }));
+    if (res.status === 200) {
+        return res.data as PlaylistItems;
+    }
+    return null;
+}
