@@ -16,7 +16,7 @@ export interface SearchQuery {
 } 
 
 export const searchTrack = async (query: SearchQuery, type: string = 'track'): Promise<SearchItems | null>  => {
-    let res = await api.get(SEARCH_ENDPOINTS.SEARCH + '?' +queryString.stringify({
+    let res = await api.get(SEARCH_ENDPOINTS.SEARCH + '?' + queryString.stringify({
         q: query.q,
         limit: 20,
         offset: query.offset,
