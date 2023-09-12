@@ -1,5 +1,5 @@
 import axios, { Axios, AxiosError } from 'axios';
-import { checkLogin, getAuthInfo, refreshToken } from './auth';
+import { checkLogin, getAuthInfo, refreshToken, saveAuthInfo } from './auth';
 
 const api = axios.create({
   baseURL: 'https://api.spotify.com/',
@@ -15,13 +15,23 @@ api.interceptors.request.use(config => {
 
 api.interceptors.response.use(response => {
   return response;
-}, (error: AxiosError) => {
-  if (error.response?.status === 401) {
+}, async (error: AxiosError) => {
+  const prevRequest = error.config;
+
+  if (error.response?.status === 401 && !prevRequest._retry) {
     const authInfo = getAuthInfo();
     if (authInfo && authInfo.refresh_token) {
-        refreshToken(authInfo.refresh_token);
+      prevRequest._retry = true;
+      refreshToken(authInfo.refresh_token).then((e) => {
+        if (e) {
+          saveAuthInfo(e);
+          prevRequest.headers.Authorization =  `Bearer ${e?.access_token}`;
+        }
+      });
     }
+    return api(prevRequest);
   }
+
   return Promise.reject(error);
 })
 
